@@ -1,0 +1,37 @@
+# Pi and Agent local state
+.atl/
+.engram/
+
+# Binaries and build outputs
+/bin/
+/dist/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test artifacts
+*.out
+*.test
+coverage.txt
+
+# Temp and Upload storage
+/tmp/
+/uploads/
+/storage/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Node / Tailwind (if npm is used)
+node_modules/
