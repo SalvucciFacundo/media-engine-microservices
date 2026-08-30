@@ -71,7 +71,7 @@ func JobCard(job *domain.Job) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, " class=\"bg-[#12121c]/90 border border-[#1e1e2d] hover:border-indigo-500/40 rounded-2xl p-5 sm:p-6 shadow-xl transition-all duration-300 relative overflow-hidden group\"><!-- Top Bar: File Info & Badge --><div class=\"flex items-start justify-between gap-4\"><div class=\"flex items-start space-x-3 sm:space-x-4 overflow-hidden\"><div class=\"w-12 h-12 rounded-xl bg-[#0c0c14] border border-[#232336] flex items-center justify-center shrink-0 text-xl group-hover:scale-105 transition-transform\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, " class=\"bg-obsidian-800/90 border border-obsidian-border hover:border-brand-500/40 rounded-2xl p-5 sm:p-6 shadow-xl transition-all duration-300 relative overflow-hidden group\"><!-- Top Bar: File Info & Badge --><div class=\"flex items-start justify-between gap-4\"><div class=\"flex items-start space-x-3 sm:space-x-4 overflow-hidden\"><div class=\"w-12 h-12 rounded-xl bg-obsidian-900 border border-obsidian-border flex items-center justify-center shrink-0 text-xl group-hover:scale-105 transition-transform\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -99,14 +99,14 @@ func JobCard(job *domain.Job) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</h3><div class=\"flex flex-wrap items-center gap-2 mt-1 text-xs text-slate-400\"><span class=\"font-mono text-[11px] text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/20\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</h3><div class=\"flex flex-wrap items-center gap-2 mt-1 text-xs text-slate-400\"><span class=\"font-mono text-[11px] text-brand-400 bg-brand-500/10 px-2 py-0.5 rounded border border-brand-500/20\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(job.ID[:8])
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/handlers/http/templates/job_card.templ`, Line: 33, Col: 135}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/handlers/http/templates/job_card.templ`, Line: 33, Col: 132}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -162,7 +162,7 @@ func JobCard(job *domain.Job) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		case domain.StatusProcessing:
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<span class=\"inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-mono\"><svg class=\"animate-spin -ml-0.5 mr-1 h-3.5 w-3.5 text-indigo-400\" fill=\"none\" viewBox=\"0 0 24 24\"><circle class=\"opacity-25\" cx=\"12\" cy=\"12\" r=\"10\" stroke=\"currentColor\" stroke-width=\"4\"></circle> <path class=\"opacity-75\" fill=\"currentColor\" d=\"M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z\"></path></svg> Worker Processing</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<span class=\"inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-brand-500/10 text-brand-400 border border-brand-500/20 font-mono\"><svg class=\"animate-spin -ml-0.5 mr-1 h-3.5 w-3.5 text-brand-400\" fill=\"none\" viewBox=\"0 0 24 24\"><circle class=\"opacity-25\" cx=\"12\" cy=\"12\" r=\"10\" stroke=\"currentColor\" stroke-width=\"4\"></circle> <path class=\"opacity-75\" fill=\"currentColor\" d=\"M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z\"></path></svg> Worker Processing</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -182,7 +182,7 @@ func JobCard(job *domain.Job) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if job.Status == domain.StatusPending || job.Status == domain.StatusProcessing {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<div class=\"mt-4 pt-3 border-t border-[#1e1e2d]\"><div class=\"flex items-center justify-between text-xs font-mono text-slate-400 mb-1.5\"><span>Asynchronous Pipeline Progress</span> <span class=\"text-indigo-400 font-bold\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<div class=\"mt-4 pt-3 border-t border-obsidian-border/80\"><div class=\"flex items-center justify-between text-xs font-mono text-slate-400 mb-1.5\"><span>Asynchronous Pipeline Progress</span> <span class=\"text-brand-400 font-bold\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -197,7 +197,7 @@ func JobCard(job *domain.Job) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</span></div><div class=\"w-full h-1.5 rounded-full bg-[#1c1c2b] overflow-hidden\"><div class=\"h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-500 animate-pulse\" style=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</span></div><div class=\"w-full h-1.5 rounded-full bg-obsidian-900 overflow-hidden\"><div class=\"h-full bg-gradient-to-r from-brand-600 to-sky-400 rounded-full transition-all duration-500 animate-pulse\" style=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -248,7 +248,7 @@ func JobCard(job *domain.Job) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if job.Status == domain.StatusCompleted && len(job.Artifacts) > 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<div class=\"mt-5 pt-4 border-t border-[#1e1e2d]\"><div class=\"flex items-center justify-between mb-3\"><span class=\"text-xs font-semibold uppercase tracking-wider text-slate-400 font-mono\">Generated Artifacts (")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<div class=\"mt-5 pt-4 border-t border-obsidian-border/80\"><div class=\"flex items-center justify-between mb-3\"><span class=\"text-xs font-semibold uppercase tracking-wider text-slate-400 font-mono\">Generated Artifacts (")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
