@@ -33,15 +33,15 @@ Chain strategy: stacked-to-main
 - [x] Write integration tests for PostgreSQL repository with testcontainers or test database in `internal/adapters/postgres/repository_test.go`. <!-- sdd-owner: implementation -->
 
 ### Phase 2: NATS Event Bus & Worker Engine (Image/PDF Processors)
-- [ ] Define NATS event bus ports (`internal/ports/eventbus.go`) for publisher and subscriber, and processor port (`internal/ports/processor.go`). <!-- sdd-owner: implementation -->
-- [ ] Implement NATS event bus adapter (`internal/adapters/nats/eventbus.go`) with JSON event envelope serialization and subject helper functions. <!-- sdd-owner: implementation -->
-- [ ] Write unit/integration tests for NATS serialization and event handling in `internal/adapters/nats/eventbus_test.go`. <!-- sdd-owner: implementation -->
-- [ ] Implement Image Media Processor (`internal/handlers/media/image_processor.go`) supporting resizing and WebP conversion. <!-- sdd-owner: implementation -->
-- [ ] Implement PDF Media Processor (`internal/handlers/media/pdf_processor.go`) supporting text extraction and cover rendering. <!-- sdd-owner: implementation -->
-- [ ] Write unit tests for media processors using sample fixtures in `internal/handlers/media/processor_test.go` (Strict TDD). <!-- sdd-owner: implementation -->
-- [ ] Implement Worker Engine application service (`internal/core/worker.go`) subscribing to NATS queue groups, dispatching to media processors, updating PostgreSQL status, and publishing status events. <!-- sdd-owner: implementation -->
-- [ ] Write integration tests for the worker pipeline in `internal/core/worker_test.go`. <!-- sdd-owner: implementation -->
-- [ ] Create Worker entry point (`cmd/worker/main.go`) with graceful shutdown support. <!-- sdd-owner: implementation -->
+- [x] Define NATS event bus ports (`internal/ports/eventbus.go`) for publisher and subscriber, and processor port (`internal/ports/processor.go`). <!-- sdd-owner: implementation -->
+- [x] Implement NATS event bus adapter (`internal/adapters/nats/eventbus.go`) with JSON event envelope serialization and subject helper functions. <!-- sdd-owner: implementation -->
+- [x] Write unit/integration tests for NATS serialization and event handling in `internal/adapters/nats/eventbus_test.go`. <!-- sdd-owner: implementation -->
+- [x] Implement Image Media Processor (`internal/handlers/media/image_processor.go`) supporting resizing and WebP conversion. <!-- sdd-owner: implementation -->
+- [x] Implement PDF Media Processor (`internal/handlers/media/pdf_processor.go`) supporting text extraction and cover rendering. <!-- sdd-owner: implementation -->
+- [x] Write unit tests for media processors using sample fixtures in `internal/handlers/media/processor_test.go` (Strict TDD). <!-- sdd-owner: implementation -->
+- [x] Implement Worker Engine application service (`internal/core/worker.go`) subscribing to NATS queue groups, dispatching to media processors, updating PostgreSQL status, and publishing status events. <!-- sdd-owner: implementation -->
+- [x] Write integration tests for the worker pipeline in `internal/core/worker_test.go`. <!-- sdd-owner: implementation -->
+- [x] Create Worker entry point (`cmd/worker/main.go`) with graceful shutdown support. <!-- sdd-owner: implementation -->
 
 ### Phase 3: Web Gateway, Templ Views, HTMX, SSE, & TTL Janitor
 - [ ] Set up Web Gateway application service (`internal/core/upload.go`) for validating uploads, saving files, creating DB records, and publishing creation events. <!-- sdd-owner: implementation -->
