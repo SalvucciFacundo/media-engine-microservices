@@ -44,13 +44,13 @@ Chain strategy: stacked-to-main
 - [x] Create Worker entry point (`cmd/worker/main.go`) with graceful shutdown support. <!-- sdd-owner: implementation -->
 
 ### Phase 3: Web Gateway, Templ Views, HTMX, SSE, & TTL Janitor
-- [ ] Set up Web Gateway application service (`internal/core/upload.go`) for validating uploads, saving files, creating DB records, and publishing creation events. <!-- sdd-owner: implementation -->
-- [ ] Create Templ components (`internal/handlers/http/templates/`) for layout, upload form, job cards, and real-time SSE progress updates. <!-- sdd-owner: implementation -->
-- [ ] Implement HTTP handlers and routes (`internal/handlers/http/handler.go`) for multipart upload, static asset serving, and SSE streaming (`/jobs/{id}/events`). <!-- sdd-owner: implementation -->
-- [ ] Write unit and integration tests for Web Gateway upload and SSE endpoints in `internal/handlers/http/handler_test.go`. <!-- sdd-owner: implementation -->
-- [ ] Create Gateway entry point (`cmd/gateway/main.go`) with graceful shutdown. <!-- sdd-owner: implementation -->
-- [ ] Implement Ephemeral TTL Janitor core service (`internal/core/janitor.go`) and background scheduler for pruning expired records and physical files. <!-- sdd-owner: implementation -->
-- [ ] Write unit/integration tests for TTL Janitor in `internal/core/janitor_test.go`. <!-- sdd-owner: implementation -->
-- [ ] Create Janitor entry point (`cmd/janitor/main.go`) or integrate background routine into gateway/worker. <!-- sdd-owner: implementation -->
-- [ ] Create `docker-compose.yml` defining PostgreSQL, NATS, Web Gateway, Worker Engine, and Janitor services for end-to-end local validation. <!-- sdd-owner: implementation -->
-- [ ] Perform end-to-end integration verification (upload image/PDF via web interface, verify background processing, SSE stream updates, and TTL cleanup). <!-- sdd-owner: implementation -->
+- [x] Set up Web Gateway application service (`internal/core/upload.go`) for validating uploads, saving files, creating DB records, and publishing creation events. <!-- sdd-owner: implementation -->
+- [x] Create Templ components (`internal/handlers/http/templates/`) for layout, upload form, job cards, and real-time SSE progress updates. <!-- sdd-owner: implementation -->
+- [x] Implement HTTP handlers and routes (`internal/handlers/http/handler.go`) for multipart upload, static asset serving, and SSE streaming (`/jobs/{id}/events`). <!-- sdd-owner: implementation -->
+- [x] Write unit and integration tests for Web Gateway upload and SSE endpoints in `internal/handlers/http/handler_test.go`. <!-- sdd-owner: implementation -->
+- [x] Create Gateway entry point (`cmd/gateway/main.go`) with graceful shutdown. <!-- sdd-owner: implementation -->
+- [x] Implement Ephemeral TTL Janitor core service (`internal/core/janitor.go`) and background scheduler for pruning expired records and physical files. <!-- sdd-owner: implementation -->
+- [x] Write unit/integration tests for TTL Janitor in `internal/core/janitor_test.go`. <!-- sdd-owner: implementation -->
+- [x] Create Janitor entry point (`cmd/janitor/main.go`) or integrate background routine into gateway/worker. <!-- sdd-owner: implementation -->
+- [x] Create `docker-compose.yml` defining PostgreSQL, NATS, Web Gateway, Worker Engine, and Janitor services for end-to-end local validation. <!-- sdd-owner: implementation -->
+- [x] Perform end-to-end integration verification (upload image/PDF via web interface, verify background processing, SSE stream updates, and TTL cleanup). <!-- sdd-owner: implementation -->

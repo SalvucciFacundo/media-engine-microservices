@@ -1,0 +1,43 @@
+package templates
+
+import (
+	"fmt"
+	"github.com/SalvucciFacundo/media-engine-microservices/internal/domain"
+)
+
+templ Dashboard(jobs []*domain.Job) {
+	@Layout("Live Dashboard") {
+		<div class="space-y-8">
+			<!-- Upload Form Component -->
+			@UploadForm()
+
+			<!-- Active & Recent Processing Stream -->
+			<div class="space-y-4">
+				<div class="flex items-center justify-between">
+					<div class="flex items-center space-x-2">
+						<h2 class="text-lg font-semibold text-slate-100">Tasks Stream</h2>
+						<span class="px-2 py-0.5 rounded-full text-xs font-mono bg-slate-800 text-slate-400 border border-slate-700">
+							{ fmt.Sprintf("%d", len(jobs)) }
+						</span>
+					</div>
+					<span class="text-xs text-slate-400 flex items-center gap-1.5">
+						<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+						Live SSE Updates
+					</span>
+				</div>
+
+				<div id="job-container" class="space-y-4">
+					if len(jobs) == 0 {
+						<div class="text-center py-12 border border-dashed border-slate-800 rounded-2xl bg-slate-900/30">
+							<p class="text-sm text-slate-500">No media processing jobs yet. Upload an image or PDF above.</p>
+						</div>
+					} else {
+						for _, job := range jobs {
+							@JobCard(job)
+						}
+					}
+				</div>
+			</div>
+		</div>
+	}
+}

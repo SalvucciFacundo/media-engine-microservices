@@ -1,0 +1,98 @@
+package templates
+
+import (
+	"fmt"
+	"time"
+	"github.com/SalvucciFacundo/media-engine-microservices/internal/domain"
+)
+
+templ JobCard(job *domain.Job) {
+	<div
+		id={ fmt.Sprintf("job-%s", job.ID) }
+		if job.Status == domain.StatusPending || job.Status == domain.StatusProcessing {
+			hx-ext="sse"
+			sse-connect={ fmt.Sprintf("/jobs/%s/events", job.ID) }
+			sse-swap="job-update"
+			hx-swap="outerHTML"
+		}
+		class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-5 shadow-lg transition-all duration-300 hover:border-slate-600"
+	>
+		<div class="flex items-start justify-between gap-4">
+			<div class="flex items-start space-x-3 overflow-hidden">
+				<div class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center shrink-0">
+					if job.MediaType == "application/pdf" {
+						<svg class="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+						</svg>
+					} else {
+						<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+						</svg>
+					}
+				</div>
+				<div class="overflow-hidden">
+					<h3 class="text-sm font-semibold text-slate-100 truncate">{ job.OriginalFilename }</h3>
+					<div class="flex items-center gap-2 mt-1 text-xs text-slate-400">
+						<span class="font-mono text-[11px] text-slate-500">{ job.ID[:8] }</span>
+						<span>•</span>
+						<span>{ job.MediaType }</span>
+						<span>•</span>
+						<span>{ fmt.Sprintf("%.1f KB", float64(job.FileSize)/1024.0) }</span>
+						<span>•</span>
+						<span>{ job.CreatedAt.Format(time.TimeOnly) }</span>
+					</div>
+				</div>
+			</div>
+
+			<div>
+				switch job.Status {
+					case domain.StatusPending:
+						<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20">
+							<span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
+							Queued
+						</span>
+					case domain.StatusProcessing:
+						<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+							<svg class="animate-spin -ml-0.5 mr-1 h-3 w-3 text-indigo-400" fill="none" viewBox="0 0 24 24">
+								<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+								<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+							</svg>
+							Processing
+						</span>
+					case domain.StatusCompleted:
+						<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+							<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+							</svg>
+							Completed
+						</span>
+					case domain.StatusFailed:
+						<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-rose-500/10 text-rose-400 border border-rose-500/20">
+							<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+							</svg>
+							Failed
+						</span>
+				}
+			</div>
+		</div>
+
+		if job.Status == domain.StatusProcessing {
+			<div class="mt-4">
+				<div class="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden">
+					<div class="bg-indigo-500 h-1.5 rounded-full animate-pulse w-3/4"></div>
+				</div>
+			</div>
+		}
+
+		if job.Status == domain.StatusFailed && job.ErrorMessage != nil {
+			<div class="mt-4 p-3 rounded-xl bg-rose-950/40 border border-rose-800/40 text-xs text-rose-300">
+				<strong>Error:</strong> { *job.ErrorMessage }
+			</div>
+		}
+
+		if job.Status == domain.StatusCompleted {
+			@ArtifactsList(job.Artifacts)
+		}
+	</div>
+}

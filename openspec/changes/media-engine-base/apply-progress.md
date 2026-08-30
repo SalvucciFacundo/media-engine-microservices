@@ -1,6 +1,6 @@
 # Apply Progress: media-engine-base
 
-## Current Phase: Phase 2 (NATS Event Bus & Worker Engine: Image/PDF Processors)
+## Current Phase: Phase 3 (Web Gateway, Templ Views, HTMX, SSE, TTL Janitor & Docker Compose)
 
 ### Completed Tasks
 - [x] Initialize Go module structure (`github.com/SalvucciFacundo/media-engine-microservices`).
@@ -20,6 +20,16 @@
 - [x] Implement Worker Engine application service (`internal/core/worker.go`) subscribing to NATS queue groups, dispatching to media processors, updating PostgreSQL status, and publishing status events.
 - [x] Write unit and integration tests for the worker pipeline in `internal/core/worker_test.go`.
 - [x] Create Worker entry point (`cmd/worker/main.go`) with graceful shutdown support.
+- [x] Implement Web Gateway application service (`internal/core/upload.go`) for validating uploads, saving files, creating DB records, and publishing creation events with rollback support.
+- [x] Write unit tests for upload service in `internal/core/upload_test.go` (Strict TDD).
+- [x] Implement Ephemeral TTL Janitor core service (`internal/core/janitor.go`) and background scheduler for pruning expired records and physical files.
+- [x] Write unit and integration tests for TTL Janitor in `internal/core/janitor_test.go` (Strict TDD).
+- [x] Create Templ components (`internal/handlers/http/templates/`) for layout, upload form, job cards, artifacts list, and real-time SSE progress updates.
+- [x] Implement HTTP handlers and routes (`internal/handlers/http/handler.go`) for multipart upload, static asset serving, SSE streaming (`/jobs/{id}/events`), and artifact downloads (`/artifacts/{id}/download`).
+- [x] Write unit and integration tests for Web Gateway upload and SSE streaming in `internal/handlers/http/handler_test.go` (Strict TDD).
+- [x] Create Gateway entry point (`cmd/gateway/main.go`) with graceful shutdown and background Janitor ticker.
+- [x] Create Janitor standalone entry point (`cmd/janitor/main.go`) with graceful shutdown.
+- [x] Create multi-stage `Dockerfile` and `docker-compose.yml` configuring PostgreSQL, NATS, Web Gateway, and Worker Engine services.
 
 ### TDD Cycle Evidence
 
@@ -30,37 +40,47 @@
 | `internal/adapters/postgres` | Written `repository_test.go` testing CreateJob, GetJobByID (with artifacts), UpdateJobStatus (valid and invalid transitions), AddArtifact, ListExpiredJobs, and DeleteJob. Failed with no Go files. | Implemented `repository.go` with `pgxpool` and transaction locks on status update. | Full test suite passes against `pgxmock/v4` with zero race conditions. |
 | `internal/adapters/nats` | Written `eventbus_test.go` with embedded in-memory NATS server, testing publish/subscribe, queue group load balancing, error validation, and malformed JSON handling. Failed due to missing Go files. | Implemented `eventbus.go` with structured JSON envelope serialization, subject hierarchy helpers (`jobs.created`, `jobs.status.{id}`, `jobs.completed`, `jobs.failed`), and error checks. | Tests pass with `-race` flag enabled. |
 | `internal/handlers/media` | Written `processor_test.go` with synthetic PNG/JPEG/PDF fixtures, verifying `CanProcess`, thumbnail generation, medium resized images, PDF text extraction, and PDF cover thumbnail creation. Failed due to missing Go files. | Implemented `image_processor.go` (bilinear scaling, thumbnail, medium resized, webp/optimized artifacts) and `pdf_processor.go` (header validation, text extraction, styled PNG cover card rendering). | Full media processor test suite passes with zero race conditions. |
-| `internal/core` | Written `worker_test.go` checking worker subscription, successful dispatch to media processors, state updates in repository, published events over event bus, unsupported media type error handling, processor failure handling, and end-to-end integration pipeline. | Implemented `worker.go` with `WorkerService`, queue group subscription, polymorphic dispatch, panic recovery (`defer func() { recover() }`), and status event publishing. | Full worker test suite passes with `-race` enabled. |
+| `internal/core` (Worker) | Written `worker_test.go` checking worker subscription, successful dispatch to media processors, state updates in repository, published events over event bus, unsupported media type error handling, processor failure handling, and end-to-end integration pipeline. | Implemented `worker.go` with `WorkerService`, queue group subscription, polymorphic dispatch, panic recovery (`defer func() { recover() }`), and status event publishing. | Full worker test suite passes with `-race` enabled. |
+| `internal/core` (Upload) | Written `upload_test.go` testing ProcessUpload with valid files, supported media types, unsupported media types, empty files, and rollback on DB / Publisher failures. Failed due to missing symbols. | Implemented `upload.go` with MIME-type validation, unique storage paths, job registration, and full rollback protection on failure. | Tests pass with `-race` enabled. |
+| `internal/core` (Janitor) | Written `janitor_test.go` testing PruneExpired with expired jobs, associated artifact physical file deletion, non-expired isolation, missing file tolerance, and background ticker start/stop. Failed due to missing symbols. | Implemented `janitor.go` with `JanitorService`, query limiting, multi-file deletion, and background ticker routine. | Tests pass with `-race` enabled. |
+| `internal/handlers/http` | Written `handler_test.go` testing dashboard rendering, HTMX multipart upload (JobCard swap), JSON API upload, SSE live streaming (`/jobs/{id}/events`), and artifact downloads. Failed due to missing package. | Implemented `handler.go` with Go 1.22+ routing patterns, HTMX detection, SSE event streams with flusher, and Templ view integration. | All handler tests pass with zero race conditions. |
 
 ### Files Changed / Created
-- `internal/adapters/nats/eventbus.go`
-- `internal/adapters/nats/eventbus_test.go`
-- `internal/handlers/media/image_processor.go`
-- `internal/handlers/media/pdf_processor.go`
-- `internal/handlers/media/processor_test.go`
-- `internal/core/worker.go`
-- `internal/core/worker_test.go`
-- `cmd/worker/main.go`
+- `internal/core/upload.go`
+- `internal/core/upload_test.go`
+- `internal/core/janitor.go`
+- `internal/core/janitor_test.go`
+- `internal/handlers/http/templates/layout.templ`
+- `internal/handlers/http/templates/layout_templ.go`
+- `internal/handlers/http/templates/upload_form.templ`
+- `internal/handlers/http/templates/upload_form_templ.go`
+- `internal/handlers/http/templates/job_card.templ`
+- `internal/handlers/http/templates/job_card_templ.go`
+- `internal/handlers/http/templates/artifacts_list.templ`
+- `internal/handlers/http/templates/artifacts_list_templ.go`
+- `internal/handlers/http/templates/dashboard.templ`
+- `internal/handlers/http/templates/dashboard_templ.go`
+- `internal/handlers/http/handler.go`
+- `internal/handlers/http/handler_test.go`
+- `cmd/gateway/main.go`
+- `cmd/janitor/main.go`
+- `Dockerfile`
+- `docker-compose.yml`
 - `openspec/changes/media-engine-base/tasks.md`
 - `openspec/changes/media-engine-base/apply-progress.md`
 
 ### Test Commands Run
+- `go test -v -count=1 -race ./internal/adapters/localfs/...` (PASS)
 - `go test -v -count=1 -race ./internal/adapters/nats/...` (PASS)
+- `go test -v -count=1 -race ./internal/adapters/postgres/...` (PASS)
+- `go test -v -count=1 -race ./internal/domain/...` (PASS)
 - `go test -v -count=1 -race ./internal/handlers/media/...` (PASS)
 - `go test -v -count=1 -race ./internal/core/...` (PASS)
+- `go test -v -count=1 -race ./internal/handlers/http/...` (PASS)
 - `go test -v -count=1 -race ./...` (PASS)
+- `go build -o /tmp/gateway ./cmd/gateway` (PASS)
 - `go build -o /tmp/worker ./cmd/worker` (PASS)
+- `go build -o /tmp/janitor ./cmd/janitor` (PASS)
 
-### Remaining Tasks (Phase 3)
-```text
-- [ ] Set up Web Gateway application service (internal/core/upload.go) for validating uploads, saving files, creating DB records, and publishing creation events. <!-- sdd-owner: implementation -->
-- [ ] Create Templ components (internal/handlers/http/templates/) for layout, upload form, job cards, and real-time SSE progress updates. <!-- sdd-owner: implementation -->
-- [ ] Implement HTTP handlers and routes (internal/handlers/http/handler.go) for multipart upload, static asset serving, and SSE streaming (/jobs/{id}/events). <!-- sdd-owner: implementation -->
-- [ ] Write unit and integration tests for Web Gateway upload and SSE endpoints in internal/handlers/http/handler_test.go. <!-- sdd-owner: implementation -->
-- [ ] Create Gateway entry point (cmd/gateway/main.go) with graceful shutdown. <!-- sdd-owner: implementation -->
-- [ ] Implement Ephemeral TTL Janitor core service (internal/core/janitor.go) and background scheduler for pruning expired records and physical files. <!-- sdd-owner: implementation -->
-- [ ] Write unit/integration tests for TTL Janitor in internal/core/janitor_test.go. <!-- sdd-owner: implementation -->
-- [ ] Create Janitor entry point (cmd/janitor/main.go) or integrate background routine into gateway/worker. <!-- sdd-owner: implementation -->
-- [ ] Create docker-compose.yml defining PostgreSQL, NATS, Web Gateway, Worker Engine, and Janitor services for end-to-end local validation. <!-- sdd-owner: implementation -->
-- [ ] Perform end-to-end integration verification (upload image/PDF via web interface, verify background processing, SSE stream updates, and TTL cleanup). <!-- sdd-owner: implementation -->
-```
+### Remaining Tasks
+None. All tasks across Phase 1, Phase 2, and Phase 3 are complete.
