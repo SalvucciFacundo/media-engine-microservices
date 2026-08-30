@@ -13,6 +13,26 @@ import (
 	"github.com/SalvucciFacundo/media-engine-microservices/internal/domain"
 )
 
+func countCompleted(jobs []*domain.Job) int {
+	c := 0
+	for _, j := range jobs {
+		if j.Status == domain.StatusCompleted {
+			c++
+		}
+	}
+	return c
+}
+
+func countActive(jobs []*domain.Job) int {
+	c := 0
+	for _, j := range jobs {
+		if j.Status == domain.StatusPending || j.Status == domain.StatusProcessing {
+			c++
+		}
+	}
+	return c
+}
+
 func Dashboard(jobs []*domain.Job) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -46,7 +66,46 @@ func Dashboard(jobs []*domain.Job) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"space-y-8\"><!-- Upload Form Component -->")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"space-y-8\"><!-- Architecture Topology Diagram Banner --><div class=\"bg-[#10101a]/80 border border-[#1e1e2d] rounded-2xl p-6 shadow-xl relative overflow-hidden\"><div class=\"flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6\"><div><div class=\"flex items-center gap-2\"><span class=\"w-2 h-2 rounded-full bg-emerald-400 animate-pulse\"></span> <span class=\"text-xs font-semibold uppercase tracking-wider text-emerald-400\">Distributed Topology Map</span></div><h1 class=\"text-2xl font-black text-white mt-1\">Real-Time Event Processing Pipeline</h1><p class=\"text-xs text-slate-400 max-w-xl mt-1\">Decoupled asynchronous microservices communicating via NATS queue groups with persistent PostgreSQL state tracking and SSE browser updates.</p></div><!-- Visual Node Pipeline --><div class=\"grid grid-cols-2 sm:grid-cols-4 gap-3 w-full lg:w-auto\"><div class=\"p-3 rounded-xl bg-[#141420] border border-[#222234] flex flex-col\"><div class=\"flex items-center justify-between text-[11px] font-mono text-slate-400 mb-1\"><span>Gateway</span> <span class=\"w-1.5 h-1.5 rounded-full bg-emerald-400\"></span></div><span class=\"text-xs font-bold text-white\">HTTP + SSE</span> <span class=\"text-[10px] text-slate-500 font-mono\">Port :8080</span></div><div class=\"p-3 rounded-xl bg-[#141420] border border-[#222234] flex flex-col\"><div class=\"flex items-center justify-between text-[11px] font-mono text-slate-400 mb-1\"><span>NATS Bus</span> <span class=\"w-1.5 h-1.5 rounded-full bg-emerald-400\"></span></div><span class=\"text-xs font-bold text-white\">Queue Group</span> <span class=\"text-[10px] text-slate-500 font-mono\">jobs.created</span></div><div class=\"p-3 rounded-xl bg-[#141420] border border-[#222234] flex flex-col\"><div class=\"flex items-center justify-between text-[11px] font-mono text-slate-400 mb-1\"><span>Worker</span> <span class=\"w-1.5 h-1.5 rounded-full bg-emerald-400\"></span></div><span class=\"text-xs font-bold text-white\">Image & PDF</span> <span class=\"text-[10px] text-slate-500 font-mono\">Consumer</span></div><div class=\"p-3 rounded-xl bg-[#141420] border border-[#222234] flex flex-col\"><div class=\"flex items-center justify-between text-[11px] font-mono text-slate-400 mb-1\"><span>PostgreSQL</span> <span class=\"w-1.5 h-1.5 rounded-full bg-emerald-400\"></span></div><span class=\"text-xs font-bold text-white\">State Machine</span> <span class=\"text-[10px] text-slate-500 font-mono\">SELECT FOR UPDATE</span></div></div></div><!-- Live KPI Statistics Strip --><div class=\"grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-6 border-t border-[#1e1e2d]/60\"><div><span class=\"text-xs text-slate-500 uppercase tracking-wider font-semibold\">Total Ingested</span><div class=\"text-xl font-bold text-white font-mono mt-0.5\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var3 string
+			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", len(jobs)))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/handlers/http/templates/dashboard.templ`, Line: 89, Col: 95}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</div></div><div><span class=\"text-xs text-slate-500 uppercase tracking-wider font-semibold\">Completed</span><div class=\"text-xl font-bold text-emerald-400 font-mono mt-0.5\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var4 string
+			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", countCompleted(jobs)))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/handlers/http/templates/dashboard.templ`, Line: 93, Col: 112}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div></div><div><span class=\"text-xs text-slate-500 uppercase tracking-wider font-semibold\">In Flight</span><div class=\"text-xl font-bold text-amber-400 font-mono mt-0.5\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var5 string
+			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", countActive(jobs)))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/handlers/http/templates/dashboard.templ`, Line: 97, Col: 107}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div></div><div><span class=\"text-xs text-slate-500 uppercase tracking-wider font-semibold\">Storage Health</span><div class=\"text-xl font-bold text-indigo-400 font-mono mt-0.5\">TTL Active</div></div></div></div><!-- Upload Form -->")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -54,25 +113,25 @@ func Dashboard(jobs []*domain.Job) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<!-- Active & Recent Processing Stream --><div class=\"space-y-4\"><div class=\"flex items-center justify-between\"><div class=\"flex items-center space-x-2\"><h2 class=\"text-lg font-semibold text-slate-100\">Tasks Stream</h2><span class=\"px-2 py-0.5 rounded-full text-xs font-mono bg-slate-800 text-slate-400 border border-slate-700\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<!-- Tasks Stream Header & Action Bar --><div class=\"space-y-4\"><div class=\"flex flex-col sm:flex-row sm:items-center justify-between gap-4\"><div class=\"flex items-center space-x-3\"><h2 class=\"text-xl font-bold text-white\">Live Tasks Stream</h2><span class=\"px-2.5 py-0.5 rounded-full text-xs font-mono bg-[#161622] text-indigo-400 border border-[#26263a]\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var3 string
-			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", len(jobs)))
+			var templ_7745c5c3_Var6 string
+			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", len(jobs)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/handlers/http/templates/dashboard.templ`, Line: 20, Col: 37}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/handlers/http/templates/dashboard.templ`, Line: 115, Col: 37}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</span></div><span class=\"text-xs text-slate-400 flex items-center gap-1.5\"><span class=\"w-2 h-2 rounded-full bg-emerald-500 animate-pulse\"></span> Live SSE Updates</span></div><div id=\"job-container\" class=\"space-y-4\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, " Total</span> <span class=\"text-xs text-slate-400 flex items-center gap-1.5 ml-2\"><span class=\"w-2 h-2 rounded-full bg-emerald-500 animate-pulse\"></span> SSE Connected</span></div><!-- Janitor Cleanup Actions --><div class=\"flex items-center space-x-2\"><button type=\"button\" hx-post=\"/admin/janitor/cleanup\" hx-target=\"#job-container\" hx-indicator=\"#janitor-spinner\" class=\"px-3 py-1.5 rounded-lg bg-[#141420] hover:bg-[#1c1c2e] border border-[#232336] text-xs font-medium text-slate-300 hover:text-white transition-all flex items-center gap-1.5 cursor-pointer shadow-sm\" title=\"Trigger the Ephemeral TTL Janitor immediately to prune expired files and database records\"><span id=\"janitor-spinner\" class=\"htmx-indicator animate-spin\">⚡</span> <svg class=\"w-3.5 h-3.5 text-indigo-400\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16\"></path></svg> <span>Run Janitor GC</span></button> <button type=\"button\" hx-post=\"/admin/janitor/cleanup?force=true\" hx-target=\"#job-container\" hx-confirm=\"Are you sure you want to purge all tasks and storage files for a clean reset?\" hx-indicator=\"#janitor-spinner\" class=\"px-3 py-1.5 rounded-lg bg-[#181119] hover:bg-[#251525] border border-rose-900/40 text-xs font-medium text-rose-300 hover:text-rose-200 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm\" title=\"Purge all tasks and storage records immediately\"><span>Purge All</span></button></div></div><!-- Tasks Container --><div id=\"job-container\" class=\"space-y-4\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if len(jobs) == 0 {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div class=\"text-center py-12 border border-dashed border-slate-800 rounded-2xl bg-slate-900/30\"><p class=\"text-sm text-slate-500\">No media processing jobs yet. Upload an image or PDF above.</p></div>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<div class=\"text-center py-16 border border-dashed border-[#1e1e2d] rounded-2xl bg-[#0e0e16]/40\"><div class=\"w-12 h-12 rounded-2xl bg-indigo-600/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center mx-auto mb-3 text-xl\">⚡</div><h3 class=\"text-base font-semibold text-white\">No active media tasks</h3><p class=\"text-xs text-slate-400 mt-1 max-w-sm mx-auto\">Upload an image or document above or click \"Quick Test\" to observe real-time background processing.</p></div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -84,7 +143,7 @@ func Dashboard(jobs []*domain.Job) templ.Component {
 					}
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

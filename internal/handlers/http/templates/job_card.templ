@@ -15,59 +15,57 @@ templ JobCard(job *domain.Job) {
 			sse-swap="job-update"
 			hx-swap="outerHTML"
 		}
-		class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-5 shadow-lg transition-all duration-300 hover:border-slate-600"
+		class="bg-[#12121c]/90 border border-[#1e1e2d] hover:border-indigo-500/40 rounded-2xl p-5 sm:p-6 shadow-xl transition-all duration-300 relative overflow-hidden group"
 	>
+		<!-- Top Bar: File Info & Badge -->
 		<div class="flex items-start justify-between gap-4">
-			<div class="flex items-start space-x-3 overflow-hidden">
-				<div class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center shrink-0">
+			<div class="flex items-start space-x-3 sm:space-x-4 overflow-hidden">
+				<div class="w-12 h-12 rounded-xl bg-[#0c0c14] border border-[#232336] flex items-center justify-center shrink-0 text-xl group-hover:scale-105 transition-transform">
 					if job.MediaType == "application/pdf" {
-						<svg class="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-						</svg>
+						<span>📄</span>
 					} else {
-						<svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-						</svg>
+						<span>🖼️</span>
 					}
 				</div>
 				<div class="overflow-hidden">
-					<h3 class="text-sm font-semibold text-slate-100 truncate">{ job.OriginalFilename }</h3>
-					<div class="flex items-center gap-2 mt-1 text-xs text-slate-400">
-						<span class="font-mono text-[11px] text-slate-500">{ job.ID[:8] }</span>
+					<h3 class="text-base font-bold text-white truncate max-w-xs sm:max-w-md">{ job.OriginalFilename }</h3>
+					<div class="flex flex-wrap items-center gap-2 mt-1 text-xs text-slate-400">
+						<span class="font-mono text-[11px] text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/20">{ job.ID[:8] }</span>
 						<span>•</span>
-						<span>{ job.MediaType }</span>
+						<span class="font-mono">{ job.MediaType }</span>
 						<span>•</span>
-						<span>{ fmt.Sprintf("%.1f KB", float64(job.FileSize)/1024.0) }</span>
+						<span class="font-mono">{ fmt.Sprintf("%.1f KB", float64(job.FileSize)/1024.0) }</span>
 						<span>•</span>
-						<span>{ job.CreatedAt.Format(time.TimeOnly) }</span>
+						<span class="text-slate-500">{ job.CreatedAt.Format(time.TimeOnly) }</span>
 					</div>
 				</div>
 			</div>
 
-			<div>
+			<!-- Status Badge -->
+			<div class="shrink-0">
 				switch job.Status {
 					case domain.StatusPending:
-						<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20">
+						<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20 font-mono">
 							<span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
-							Queued
+							Queued in NATS
 						</span>
 					case domain.StatusProcessing:
-						<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-							<svg class="animate-spin -ml-0.5 mr-1 h-3 w-3 text-indigo-400" fill="none" viewBox="0 0 24 24">
+						<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-mono">
+							<svg class="animate-spin -ml-0.5 mr-1 h-3.5 w-3.5 text-indigo-400" fill="none" viewBox="0 0 24 24">
 								<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
 								<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
 							</svg>
-							Processing
+							Worker Processing
 						</span>
 					case domain.StatusCompleted:
-						<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+						<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono">
 							<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
 							</svg>
 							Completed
 						</span>
 					case domain.StatusFailed:
-						<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-rose-500/10 text-rose-400 border border-rose-500/20">
+						<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20 font-mono">
 							<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
 							</svg>
@@ -77,22 +75,44 @@ templ JobCard(job *domain.Job) {
 			</div>
 		</div>
 
-		if job.Status == domain.StatusProcessing {
-			<div class="mt-4">
-				<div class="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden">
-					<div class="bg-indigo-500 h-1.5 rounded-full animate-pulse w-3/4"></div>
+		<!-- Progress Bar for Active Tasks -->
+		if job.Status == domain.StatusPending || job.Status == domain.StatusProcessing {
+			<div class="mt-4 pt-3 border-t border-[#1e1e2d]">
+				<div class="flex items-center justify-between text-xs font-mono text-slate-400 mb-1.5">
+					<span>Asynchronous Pipeline Progress</span>
+					<span class="text-indigo-400 font-bold">
+						if job.Status == domain.StatusPending {
+							15%
+						} else {
+							65%
+						}
+					</span>
+				</div>
+				<div class="w-full h-1.5 rounded-full bg-[#1c1c2b] overflow-hidden">
+					<div
+						class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-500 animate-pulse"
+						style={ fmt.Sprintf("width: %s;", templ.SafeCSSProperty(func() string { if job.Status == domain.StatusPending { return "20%" }; return "75%" }())) }
+					></div>
 				</div>
 			</div>
 		}
 
+		<!-- Error Message (if failed) -->
 		if job.Status == domain.StatusFailed && job.ErrorMessage != nil {
-			<div class="mt-4 p-3 rounded-xl bg-rose-950/40 border border-rose-800/40 text-xs text-rose-300">
-				<strong>Error:</strong> { *job.ErrorMessage }
+			<div class="mt-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-xs text-rose-300 font-mono">
+				Error: { *job.ErrorMessage }
 			</div>
 		}
 
-		if job.Status == domain.StatusCompleted {
-			@ArtifactsList(job.Artifacts)
+		<!-- Artifacts List (if completed) -->
+		if job.Status == domain.StatusCompleted && len(job.Artifacts) > 0 {
+			<div class="mt-5 pt-4 border-t border-[#1e1e2d]">
+				<div class="flex items-center justify-between mb-3">
+					<span class="text-xs font-semibold uppercase tracking-wider text-slate-400 font-mono">Generated Artifacts ({ fmt.Sprintf("%d", len(job.Artifacts)) })</span>
+					<span class="text-[11px] text-emerald-400 font-mono">Ready for download</span>
+				</div>
+				@ArtifactsList(job.Artifacts)
+			</div>
 		}
 	</div>
 }

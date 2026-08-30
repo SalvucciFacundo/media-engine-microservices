@@ -84,7 +84,7 @@ func main() {
 	}
 
 	// 6. HTTP Gateway Handler & Server
-	gatewayServer := gatewayHttp.NewServer(jobRepo, fileStore, eventBus, uploadService)
+	gatewayServer := gatewayHttp.NewServer(jobRepo, fileStore, eventBus, uploadService, janitorService)
 	httpServer := &http.Server{
 		Addr:         ":" + port,
 		Handler:      gatewayServer,

@@ -222,7 +222,8 @@ func setupTestServer(t *testing.T) (*gatewayHttp.Server, *mockRepo, *mockStore, 
 	bus := newMockBus()
 	uploadSvc := core.NewUploadService(repo, store, bus, 1*time.Hour)
 
-	server := gatewayHttp.NewServer(repo, store, bus, uploadSvc)
+	janitorSvc := core.NewJanitorService(repo, store)
+	server := gatewayHttp.NewServer(repo, store, bus, uploadSvc, janitorSvc)
 	return server, repo, store, bus
 }
 
