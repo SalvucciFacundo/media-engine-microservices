@@ -1,6 +1,7 @@
 # Pi and Agent local state
 .atl/
 .engram/
+.codegraph/
 
 # Binaries and build outputs
 /bin/
